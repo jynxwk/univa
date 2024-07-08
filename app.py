@@ -2,6 +2,11 @@ from univa.main import Univa
 
 app = Univa()
 
-# YOUR CODE HERE
+@app.on("start")
+def start():
+    print("Welcome to Univa!")
+    print("You can customize this message by changing the 'start' event")
+
+# Your code here
 
 app.start()

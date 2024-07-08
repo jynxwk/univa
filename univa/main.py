@@ -1,5 +1,4 @@
 import inspect
-import os
 from functools import wraps
 from .classes import Command
 
@@ -13,27 +12,37 @@ class Univa:
             "prompt": prompt,
         }
 
-    def on(self, event):
+    def on(self, event:str=''):
         def decorator(func):
-            if event not in self.available_events:
-                raise ValueError(f"Event '{event}' is not a valid event")
             @wraps(func)
             def wrapper(*args, **kwargs):
                 return func(*args, **kwargs)
-            self.events[event] = wrapper
+            event_name = event
+            if event_name == '':
+                event_name = func.__name__
+            if event_name not in self.available_events:
+                raise ValueError(f"Event '{event_name}' is not a valid event")
+            self.events[event_name] = wrapper
             if self.debug:
-                print(f"Event '{event}' registered")
+                print(f"Event '{event_name}' registered")
             return wrapper
         return decorator
     
-    def add(self, name='', description=''):
+    def remove(self, event:str=''):
+        if event in self.events:
+            del self.events[event]
+            if self.debug:
+                print(f"Event '{event}' removed")
+    
+    def add(self, name:str='', description:str=''):
         def decorator(func):
             sig = inspect.signature(func)
             cmd_args = {}
             for param_name, param in sig.parameters.items():
                 default_value = param.default if param.default is not inspect.Parameter.empty else None
                 cmd_args[param_name] = default_value
-                print(f"Parameter name: {param_name}, Default value: {default_value}")
+                if self.debug:
+                    print(f"Argument '{param_name}' with default value '{default_value}' registered for command '{name}'")
             @wraps(func)
             def wrapper(*args, **kwargs):
                 return func(*args, **kwargs)
@@ -54,9 +63,6 @@ class Univa:
     def start(self):
         if 'start' in self.events:
             self.events['start']()
-        else:
-            print("Welcome to Univa!")
-            print("You can customize this message by adding a 'start' event")
         while True:
             cmd = input(f"{self.settings['prompt']}")
             args = cmd.split(' ')[1:]

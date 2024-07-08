@@ -3,14 +3,21 @@ A little python program that makes it simple to create your own little cmd windo
 
 ## Docs
 
+### Tutorial
+
 ### Introduction
-To start open the app.py file. It should look something like this:
+Open the app.py file. It should look something like this:
 ```py
 from univa.main import Univa
 
 app = Univa()
 
-# YOUR CODE HERE
+@app.on("start")
+def start():
+    print("Welcome to Univa!")
+    print("You can customize this message by changing the 'start' event")
+
+# Your code here
 
 app.start()
 ```
@@ -69,4 +76,21 @@ Hello World
 
 As you noticed I didn't give the "add" decorator a parameter this time, so it automatically took the name of the function.
 
-This program, as well as this documentation is very early access.
+### Utils
+Utils are functions you can import that just make the coding process a little simpler and quicker
+For example:
+```py
+from univa.utils import clear
+
+#...
+
+# Clear the console before executing a command
+@app.on("before")
+def before():
+    clear()
+```
+Currently `clear` is the only function but I'm planning on adding more.
+_As the name says `clear` clears the console (but it has been optimized to work for windows and linux, just so you can save some code)_
+
+This is practically all the information you need to start programming! 
+This "framework", as well as this documentation is very early access and will be updated over time.
