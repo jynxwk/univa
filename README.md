@@ -63,13 +63,15 @@ You can remove events at any time using the `remove_event()` function:
 Univa.remove_event(event)
 ```
 
-This can be used to run events only once:
+This can be used to run events only once, for example:
 ```py
 @app.on("before")
 def start():
     print("This text only appears once before a function is executed and then never again!")
     app.remove_event("before")
 ```
+
+Events can also be disabled and enabled using the `disable_event()` and `enable_event()` functions.
 
 Here is a list of all available events:
 `start` - executed when the user starts the program
@@ -110,6 +112,8 @@ def once():
     print("You can only execute me one time")
     app.remove_command("once")
 ```
+
+Commands can also be disabled and enabled using the `disable_command()` and `enable_command()` functions.
 
 You can get all commands by using the `get_commands()` function, for example to make a dynamic help command:
 ```py
